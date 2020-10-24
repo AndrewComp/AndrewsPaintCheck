@@ -1,0 +1,741 @@
+set cut_paste_input [stack 0]
+version 11.3 v2
+push 0
+push $cut_paste_input
+Group {
+inputs 2
+name AndrewsPaintCheckV001
+selected true
+xpos -50
+ypos -522
+lock_connections {{curve x-1 0}}
+addUserKnob {20 User}
+addUserKnob {41 disable_3 l "View Paintout" T Switch2Input.disable}
+addUserKnob {41 which l "Paintout Opacity" T Dissolve1.which}
+addUserKnob {41 saturation l "Saturation Boost" T Saturation1.saturation}
+addUserKnob {26 Divider1 l "" +STARTLINE}
+addUserKnob {41 disable_5 l "Show me the Diff!" T Multiply3.disable}
+addUserKnob {41 disable_6 l "Difference Overlay" T Multiply4.disable}
+addUserKnob {41 disable_11 l "Disable Full Frame Range Difference View" t "Allows you to view the difference between your plate and the paintout across multiple frames while still only viewing one frame." T TimeEcho1.disable}
+addUserKnob {41 framesbehind l "Frames to look at" T TimeEcho1.framesbehind}
+addUserKnob {41 which_1 l "Difference View" t "0=RGB\n1=Hue\n2=Saturation\n3=Value" T Switch2.which}
+addUserKnob {41 white l "Overlay Color" T Grade1.white}
+addUserKnob {41 disable_12 l "Enable Funky Difference" T Multiply1.disable}
+addUserKnob {41 which_2 l "Funky View" T Switch3.which}
+addUserKnob {41 mix l "Funky Mix" T Merge28_ColorDif.mix}
+addUserKnob {26 Divider2 l "" +STARTLINE}
+addUserKnob {26 _1 l "Divider Check" T " "}
+addUserKnob {41 disable_7 l "Check RGBY" T Multiply6RGBY.disable}
+addUserKnob {41 disable_8 l "Check Grain RGBY" T Multiply5Grain.disable}
+addUserKnob {26 ""}
+addUserKnob {26 Judgement l "Judgement Tool" T "Click \"Prepare for Judgement\" first, then \"Judge My Shot\". \nThis will analyze every frame you choose using a difference matte \nthat compares your plate with your paintout. \nTIP: Lower number = better, as we generally want to avoid \nchanging too much of the plate. "}
+addUserKnob {41 resetROI l "Prepare for Judgement" T CurveTool1.resetROI}
+addUserKnob {41 go l "Judge My Shot" T CurveTool1.go}
+addUserKnob {41 disable_4 l "Display % Changed" T Multiply2.disable}
+}
+Input {
+inputs 0
+name Plate
+label Input2
+xpos 349
+ypos -1313
+number 1
+}
+Dot {
+name Dot24
+xpos 383
+ypos -1250
+}
+set N7353570 [stack 0]
+Input {
+inputs 0
+name Paintout
+label Input1
+xpos -141
+ypos -1311
+}
+Switch {
+inputs 2
+which 1
+name Switch2Input
+xpos -141
+ypos -1250
+disable true
+}
+push $N7353570
+Dot {
+name Dot4
+xpos 383
+ypos -1195
+}
+set N736b580 [stack 0]
+Dissolve {
+inputs 2
+which 1
+name Dissolve1
+xpos -141
+ypos -1204
+}
+set N7370b60 [stack 0]
+Dot {
+name Dot1
+xpos 50
+ypos -1140
+}
+set N737b9e0 [stack 0]
+push $N7370b60
+Switch {
+inputs 2
+which 1
+name Switch1
+xpos -141
+ypos -1060
+disable true
+}
+set N7380690 [stack 0]
+Dot {
+name Dot27
+label Paintout
+note_font_size 33
+xpos 992
+ypos -1057
+hide_input true
+}
+Colorspace {
+colorspace_out HSV
+name Colorspace4
+xpos 958
+ypos -1016
+}
+set N738e040 [stack 0]
+Shuffle {
+red blue
+green blue
+name Shuffle17
+label "blue = VALUE"
+xpos 1059
+ypos -917
+}
+push $N736b580
+Dot {
+name Dot28
+label Plate
+note_font_size 33
+xpos 1499
+ypos -1195
+}
+Colorspace {
+colorspace_out HSV
+name Colorspace3
+xpos 1465
+ypos -1024
+}
+set N73bbec0 [stack 0]
+Shuffle {
+red blue
+green blue
+name Shuffle18
+label "blue = VALUE"
+xpos 1566
+ypos -921
+}
+Difference {
+inputs 2
+gain 1000000
+name Difference2
+label VALUE
+xpos 1375
+ypos -530
+}
+push $N738e040
+Shuffle {
+red green
+blue green
+name Shuffle15
+label "green = SATURATION"
+xpos 958
+ypos -914
+}
+push $N73bbec0
+Shuffle {
+red green
+blue green
+name Shuffle16
+label "green = SATURATION"
+xpos 1465
+ypos -920
+}
+Difference {
+inputs 2
+gain 1000000
+name Difference3
+label SATURATION
+xpos 1210
+ypos -612
+}
+push $N73bbec0
+Shuffle {
+green red
+blue red
+name Shuffle13
+label "red = HUE"
+xpos 1364
+ypos -917
+}
+push $N738e040
+Shuffle {
+green red
+blue red
+name Shuffle14
+label "red = HUE"
+xpos 843
+ypos -909
+}
+Difference {
+inputs 2
+gain 1000000
+name Difference4
+label HUE
+xpos 1075
+ypos -665
+}
+push $N737b9e0
+push $N736b580
+Difference {
+inputs 2
+gain 10000000
+name Difference1
+xpos 187
+ypos -1080
+}
+set N7440670 [stack 0]
+Switch {
+inputs 4
+name Switch2
+label "Difference Views"
+xpos 187
+ypos -658
+}
+TimeEcho {
+framesbehind 17
+frmaesfade 0
+name TimeEcho1
+xpos 187
+ypos -517
+}
+Dot {
+name Dot2
+xpos 221
+ypos -324
+}
+set N7459e00 [stack 0]
+Dilate {
+channels alpha
+size 0.7
+name Dilate1
+xpos 377
+ypos -115
+}
+Blur {
+channels alpha
+size 3
+name Blur1
+xpos 377
+ypos -19
+}
+push $N7459e00
+Dilate {
+channels alpha
+size 0.7
+name Dilate2
+xpos 187
+ypos -214
+}
+Blur {
+channels alpha
+size 3
+name Blur2
+xpos 187
+ypos -114
+}
+Shuffle {
+red alpha
+green alpha
+blue alpha
+alpha white
+name Shuffle1
+xpos 187
+ypos -10
+}
+Multiply {
+value 0
+name Multiply3
+xpos 44
+ypos -16
+}
+Text2 {
+inputs 0
+font_size_toolbar 100
+font_width_toolbar 100
+font_height_toolbar 100
+message "\[value \{CurveTool1.intensitydata.a\}]% of plate changed!"
+old_message {{48 37 32 111 102 32 112 108 97 116 101 32 99 104 97 110 103 101 100 33}
+  }
+old_expression_markers {{0 0}
+  }
+box {0 0 1920 1080}
+xjustify center
+yjustify center
+transforms {{0 2}
+  }
+cursor_position 55
+font {{ Arial : Regular : truetype/msttcorefonts/arial.ttf : 0 }}
+center {960 540}
+cursor_initialised true
+autofit_bbox false
+initial_cursor_position {{0 1080}
+  }
+group_animations {{0} imported: 0 selected: items: "root transform/"}
+animation_layers {{1 11 960 540 0 0 1 1 0 0 0 0}
+  }
+color {1 0 0 1}
+color_panelDropped true
+name Text26_Judgement
+xpos -298
+ypos -164
+}
+Multiply {
+value 0
+name Multiply2
+xpos -298
+ypos -103
+}
+push $N7370b60
+Dot {
+name Dot3
+label Paintout
+note_font_size 33
+xpos -885
+ypos -1013
+hide_input true
+}
+Clamp {
+name Clamp1
+xpos -919
+ypos -963
+}
+Log2Lin {
+operation lin2log
+name Log2Lin2
+xpos -919
+ypos -899
+}
+Dot {
+name Dot31
+xpos -885
+ypos -863
+}
+set N74fb600 [stack 0]
+push $N736b580
+Dot {
+name Dot29
+label Plate
+note_font_size 33
+xpos -425
+ypos -1022
+hide_input true
+}
+Clamp {
+name Clamp2
+xpos -459
+ypos -968
+}
+Log2Lin {
+operation lin2log
+name Log2Lin1
+xpos -459
+ypos -909
+}
+Dot {
+name Dot30
+xpos -425
+ypos -861
+}
+set N7521e80 [stack 0]
+Merge2 {
+inputs 2
+operation minus
+name Merge27
+xpos -459
+ypos -700
+}
+Grade {
+white 1.8
+gamma 2.8
+name Grade5
+xpos -459
+ypos -653
+}
+push $N74fb600
+push $N7521e80
+Merge2 {
+inputs 2
+operation from
+name Merge26
+xpos -570
+ypos -706
+}
+Grade {
+white 1.8
+gamma 2.8
+name Grade4
+xpos -570
+ypos -664
+}
+push $N7521e80
+push $N74fb600
+Merge2 {
+inputs 2
+operation divide
+name Merge25
+xpos -811
+ypos -727
+}
+Grade {
+white 0.84
+add -0.065
+gamma 0.2
+name Grade7
+xpos -811
+ypos -692
+}
+Saturation {
+saturation 40
+mode Average
+name Saturation3
+xpos -811
+ypos -655
+}
+push $N74fb600
+push $N7521e80
+Merge2 {
+inputs 2
+operation divide
+name Merge1
+xpos -919
+ypos -756
+}
+Grade {
+white 0.84
+add -0.065
+gamma 0.2
+name Grade6
+xpos -919
+ypos -706
+}
+Saturation {
+saturation 40
+mode Average
+name Saturation2
+xpos -919
+ypos -659
+}
+Switch {
+inputs 4
+name Switch3
+xpos -741
+ypos -533
+}
+Shuffle {
+alpha white
+name Shuffle19
+xpos -535
+ypos -534
+}
+Multiply {
+value 0
+name Multiply1
+xpos -401
+ypos -539
+}
+push $N7380690
+Merge2 {
+inputs 2
+bbox B
+name Merge28_ColorDif
+xpos -141
+ypos -533
+}
+Merge2 {
+inputs 2
+bbox B
+name Merge2
+xpos -141
+ypos -97
+}
+Merge2 {
+inputs 2
+bbox B
+name Merge3
+xpos -141
+ypos -10
+}
+set N7607550 [stack 0]
+Grade {
+inputs 1+1
+white {4 0 0 1}
+white_panelDropped true
+white_clamp true
+name Grade1
+xpos 43
+ypos 75
+}
+Shuffle {
+alpha white
+name Shuffle2
+xpos 43
+ypos 118
+}
+Multiply {
+value 0
+name Multiply4
+xpos 43
+ypos 164
+}
+push $N7607550
+Merge2 {
+inputs 2
+bbox B
+name Merge4
+xpos -141
+ypos 170
+}
+set N7643ef0 [stack 0]
+Laplacian {
+size 6.4
+name Laplacian2
+xpos 59
+ypos 254
+}
+Grade {
+gamma 1.5
+name Grade2
+xpos 59
+ypos 325
+}
+set N7662d50 [stack 0]
+Colorspace {
+colorspace_out HSL
+name Colorspace1
+xpos 262
+ypos 325
+}
+Shuffle {
+red blue
+green blue
+alpha white
+name Shuffle6
+xpos 404
+ypos 407
+}
+push $N7662d50
+Grade {
+gamma 5
+name Grade3
+xpos 213
+ypos 367
+}
+Shuffle {
+red blue
+green blue
+alpha white
+name Shuffle5
+xpos 286
+ypos 410
+}
+push $N7662d50
+Shuffle {
+red green
+blue green
+alpha white
+name Shuffle4
+xpos 164
+ypos 409
+}
+push $N7662d50
+Shuffle {
+green red
+blue red
+alpha white
+name Shuffle3
+xpos 59
+ypos 407
+}
+ContactSheet {
+inputs 4
+rows 2
+columns 2
+gap 40
+center true
+roworder TopBottom
+startframe 1
+endframe 1
+name ContactSheet1
+xpos 164
+ypos 499
+}
+Shuffle {
+alpha white
+name Shuffle12
+xpos 170
+ypos 521
+}
+Reformat {
+name Reformat2
+xpos 164
+ypos 545
+}
+Multiply {
+value 0
+name Multiply5Grain
+xpos 164
+ypos 580
+}
+push $N7643ef0
+Dot {
+name Dot5
+xpos -564
+ypos 254
+}
+set N77144f0 [stack 0]
+Colorspace {
+colorspace_out HSL
+name Colorspace2
+xpos -250
+ypos 302
+}
+Shuffle {
+red blue
+green blue
+alpha white
+name Shuffle9
+xpos -250
+ypos 369
+}
+push $N77144f0
+Shuffle {
+red blue
+green blue
+alpha white
+name Shuffle10
+xpos -368
+ypos 372
+}
+push $N77144f0
+Shuffle {
+red green
+blue green
+alpha white
+name Shuffle8
+xpos -490
+ypos 371
+}
+push $N77144f0
+Shuffle {
+green red
+blue red
+alpha white
+name Shuffle7
+xpos -598
+ypos 369
+}
+ContactSheet {
+inputs 4
+rows 2
+columns 2
+gap 40
+center true
+roworder TopBottom
+startframe 1
+endframe 1
+name ContactSheet2
+xpos -463
+ypos 434
+}
+Shuffle {
+alpha white
+name Shuffle11
+xpos -463
+ypos 485
+}
+Reformat {
+name Reformat4
+xpos -463
+ypos 536
+}
+Multiply {
+value 0
+name Multiply6RGBY
+xpos -295
+ypos 530
+}
+push $N7643ef0
+Merge2 {
+inputs 2
+bbox B
+name Merge6RGBY
+xpos -135
+ypos 536
+}
+Merge2 {
+inputs 2
+bbox B
+name Merge5GRAIN
+xpos -135
+ypos 586
+}
+Saturation {
+mode Average
+name Saturation1
+xpos -135
+ypos 653
+addUserKnob {20 User}
+addUserKnob {41 saturation_1 l saturation T Saturation1.saturation}
+}
+Dot {
+name Dot26
+xpos -101
+ypos 809
+}
+set N784a0a0 [stack 0]
+Crop {
+box {0 0 1920 1080}
+crop false
+name Crop1
+xpos -135
+ypos 998
+}
+Output {
+name Output1
+xpos -135
+ypos 1057
+}
+push $N784a0a0
+Viewer {
+frame_range 1-96
+name Viewer1
+xpos -36
+ypos -703
+}
+push $N7440670
+CurveTool {
+ROI {0 0 1920 1080}
+autocropdata {480 270 1440 810}
+intensitydata {{trunc((curve)*100)}}
+name CurveTool1
+label "Expression for IntensityDate Alpha Channel=\ntrunc((curve)*100)"
+xpos 336
+ypos -966
+}
+end_group
+
